@@ -57,7 +57,7 @@ struct{
 struct{
   __uint(type,BPF_MAP_TYPE_HASH);
   __uint(max_entries,1024*1024);
-  __type(key,u64);
+  __type(key,struct process_id);
   __type(value,__u8);
 }whitelist_comm SEC(".maps");
 

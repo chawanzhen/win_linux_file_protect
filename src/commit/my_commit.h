@@ -7,14 +7,14 @@
 
 class commit{
 public:
-    commit& instance(){
+    static commit& instance(){
         static commit com;
         return com;
     }
 
+    std::string GetExePath();
+
 private:
     commit();
     ~commit();
-
-    std::string GetExePath();
 };

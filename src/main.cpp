@@ -10,7 +10,7 @@
 #include <spdlog/async.h>
 #include <memory>
 #include <cstdlib>
-#include "commit/commit.h"
+#include "commit/my_commit.h"
 
 using namespace std;
 

@@ -1,8 +1,11 @@
 add_library(mylib
-	commit/commit.h
-	commit/commit.cpp
-	kernel/kernel.c
+	commit/my_commit.h
+	commit/my_commit.cpp
 	bpfmanage.cpp
 	bpfmanage.h
 )
-target_include_directories(mylib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(mylib
+	PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}
+	${SPDLOG_ROOT}/include
+)

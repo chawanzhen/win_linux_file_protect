@@ -1,7 +1,6 @@
-#include "commit.h"
+#include "my_commit.h"
 #include <unistd.h>
 #include <limits.h>
-
 commit::commit(){}
 
 commit::~commit(){}
