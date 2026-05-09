@@ -9,6 +9,7 @@
 #include <string>
 #include <thread>
 #include <queue>
+#include <condition_variable>
 #include "message.pb.h"
 
 
@@ -19,6 +20,7 @@ struct MsgHeader{
     uint32_t length;
 }__attribute__((packed));
 
+namespace tcp{
 
 class TcpClient{
 public:
@@ -33,7 +35,7 @@ public:
     void sendMsg(protocol::OpType type,const google::protobuf::Message& msg);
 
 private:
-    TcpClient();
+    TcpClient():_sockfd(-1),_running(false){}
 
     void connectLoop();//重连
     void connectLoop();    // 负责重连逻辑
@@ -57,5 +59,6 @@ private:
 
     std::thread _t_connect, _t_send, _t_recv, _t_heartbeat;
 };
+}
 
 #endif
