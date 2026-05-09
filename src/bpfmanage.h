@@ -96,6 +96,7 @@ private:
 
     static int handleEvent(void* ctx,void* data,size_t data_sz);
     void start_event_loop(struct kernel* skel);
+    struct ring_buffer* rb = nullptr;
 
     std::thread poll_work;
 

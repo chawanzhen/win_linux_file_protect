@@ -15,6 +15,8 @@ static int my_libbpf_print(enum libbpf_print_level level,const char* format,va_l
     return vfprintf(stderr,format,args);
 }
 
+std::atomic<bool> g_stop_poll(false);
+
 bool bpfmanage::init(){
     libbpf_set_print(my_libbpf_print);
 
@@ -43,6 +45,19 @@ bool bpfmanage::init(){
     }
 
     return true;
+}
+
+void bpfmanage::cleanUp(){
+    g_stop_poll.store(true);
+    if (poll_work.joinable()) poll_work.join();
+    if (skel) {
+        kernel__destroy(skel);
+    }
+    if(rb){
+        ring_buffer__free(rb);
+    }
+    protected_file_map = -1;
+    white_process_map = -1;
 }
 
 bool bpfmanage::addProtectFile(const std::string &path){
@@ -194,7 +209,6 @@ int bpfmanage::handleEvent(void *ctx, void *data, size_t data_sz){
     spdlog::info("程序: {} 尝试访问: {} {}",visit_process_path,visit_file_path,visit_result);
     return false;
 }
-std::atomic<bool> g_stop_poll(false);
 
 void bpf_poll_thread_func(struct ring_buffer* rb) {
 
@@ -214,15 +228,11 @@ void bpf_poll_thread_func(struct ring_buffer* rb) {
 }
 
 void bpfmanage::start_event_loop(kernel *skel){
-    struct ring_buffer* rb = nullptr;
-
-    rb = ring_buffer__new(bpf_map__fd(skel->maps.rb),handleEvent,nullptr,nullptr);
+    rb = ring_buffer__new(bpf_map__fd(skel->maps.rb),handleEvent,this,nullptr);
     if(!rb){
         spdlog::error("无法创建 RingBuffer 管理器");
         return ;
     }
 
     poll_work = std::thread(bpf_poll_thread_func,rb);
-
-    ring_buffer__free(rb);
 }
