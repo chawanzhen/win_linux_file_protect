@@ -92,7 +92,6 @@ private:
     struct kernel* skel = nullptr;
     int protected_file_map = -1;
     int white_process_map = -1;
-    struct ring_buffer* rb = nullptr;
 
     static int handleEvent(void* ctx,void* data,size_t data_sz);
     void start_event_loop(struct kernel* skel);

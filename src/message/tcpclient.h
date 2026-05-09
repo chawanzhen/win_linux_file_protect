@@ -37,7 +37,6 @@ public:
 private:
     TcpClient():_sockfd(-1),_running(false){}
 
-    void connectLoop();//重连
     void connectLoop();    // 负责重连逻辑
     void sendWorker();     // 负责从队列取数据发送
     void recvWorker();     // 负责接收指令并分发
